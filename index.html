@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anime Math Adventure: Petualangan Pengukuran di Kota Jepang</title>
+<style>
+:root{--ink:#2b2d42;--card:#fff;--b1:#ffd6e8;--b2:#c9e8ff;--b3:#fff6c9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#f1f5f9;--card:#1e293b;--b1:#3b1f33;--b2:#16304a;--b3:#3a3320}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:"Nunito","Baloo 2","Trebuchet MS",sans-serif;color:var(--ink);background:linear-gradient(170deg,var(--b2),var(--b1) 55%,var(--b3));text-align:center;overflow-x:hidden}
+#app{max-width:680px;margin:auto;padding:12px;position:relative;z-index:2}
+#sk{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+#sk span{position:absolute;top:-30px;opacity:.55;animation:fall linear infinite}
+@keyframes fall{to{transform:translate(60px,110vh) rotate(360deg)}}
+.cl{position:fixed;top:60px;font-size:40px;opacity:.5;animation:mv 40s linear infinite;z-index:1}
+@keyframes mv{from{left:-60px}to{left:105%}}
+@media (prefers-reduced-motion:reduce){#sk span,.cl{animation:none}}
+.card{background:var(--card);color:var(--ink);border-radius:24px;padding:16px;margin:10px 0;box-shadow:0 6px 0 rgba(0,0,0,.1)}
+h1{font-size:clamp(26px,7vw,38px);margin:6px 0;color:#e11d74}h1 small{display:block;font-size:.45em;color:#2563eb}
+.btn{font:inherit;font-weight:800;font-size:17px;border:0;border-radius:16px;padding:11px 18px;margin:5px;background:#f43f8e;color:#fff;box-shadow:0 5px 0 #be185d;cursor:pointer}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0}.btn.b{background:#3b82f6;box-shadow:0 5px 0 #1d4ed8}.btn.g{background:#22c55e;box-shadow:0 5px 0 #15803d}.btn.y{background:#f59e0b;box-shadow:0 5px 0 #b45309}.btn.s{background:#94a3b8;box-shadow:0 5px 0 #64748b}.btn[disabled]{opacity:.45}
+.hud{display:flex;justify-content:space-between;align-items:center;font-weight:800;background:var(--card);border-radius:16px;padding:6px 12px}
+.mini{border:0;background:none;font-size:22px;cursor:pointer}
+.row{display:flex;justify-content:center;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.fig{font-size:46px;position:relative;line-height:1;padding-top:26px}.fig b{position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:24px}.fig i{display:block;font-size:13px;font-style:normal;font-weight:800;margin-top:2px}
+.fig.sel{outline:4px solid #f43f8e;border-radius:18px;padding:26px 8px 4px}
+.jump{animation:jp .6s 2}@keyframes jp{50%{transform:translateY(-16px)}}
+.scene{border-radius:20px;padding:10px;color:#2b2d42;background:linear-gradient(#bfe6ff,#ffe3ef);position:relative;overflow:hidden;min-height:96px}
+.scene.l1{background:linear-gradient(#bfe6ff,#ffd1e6)}.scene.l2{background:linear-gradient(#cfe8ff,#fff3b8)}.scene.l3{background:linear-gradient(#d4f5e0,#ffe7a8)}.scene.l4{background:linear-gradient(#ffe0b8,#ffc9d6)}
+.walk{position:absolute;bottom:6px;left:2%;font-size:42px;animation:wk 1.4s linear forwards}@keyframes wk{to{left:78%}}
+.bub{background:#fff;color:#2b2d42;border:3px solid #f9a8d4;border-radius:18px;padding:10px 12px;margin:8px 0;font-size:18px;font-weight:700;text-align:left}
+.vis{font-size:44px;margin:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.op{font:inherit;font-weight:800;font-size:18px;border:3px solid #cbd5e1;background:var(--card);color:var(--ink);border-radius:16px;padding:10px;cursor:pointer;display:flex;align-items:center;gap:8px;text-align:left}
+.op.on{border-color:#f43f8e;background:#fff0f7;color:#2b2d42}.op.ok{border-color:#16a34a;background:#bbf7d0;color:#14532d}.op.no{border-color:#dc2626;background:#fecaca;color:#7f1d1d;opacity:.7}
+.lt{width:30px;height:30px;line-height:30px;border-radius:50%;background:#3b82f6;color:#fff;text-align:center;flex:none}
+.ex{background:#fef9c3;color:#2b2d42;border-radius:14px;padding:8px;margin:8px 0;font-weight:700;text-align:left}
+.map{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.loc{font:inherit;border:0;border-radius:20px;padding:14px 8px;background:var(--card);color:var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.12);cursor:pointer;font-weight:800}
+.loc big{display:block;font-size:44px}.loc small{display:block;font-weight:600}.loc[disabled]{opacity:.5;cursor:not-allowed}
+.ruler{position:relative;height:56px;margin:6px 4px 20px;background:#fde68a;border:2px solid #92400e;border-radius:6px;display:flex}
+.ruler span{flex:1;border-left:2px solid #92400e;height:18px;font-size:11px;font-weight:800;position:relative}.ruler span em{position:absolute;top:20px;left:-4px;font-style:normal}
+.ruler .pen{position:absolute;top:20px;height:16px;background:#ec4899;border-radius:8px;left:0}
+#md{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:9;display:none;align-items:center;justify-content:center;padding:12px}#md.on{display:flex}
+#md .card{max-width:560px;max-height:90vh;overflow:auto;width:100%}
+li{text-align:left;margin:5px 0}
+</style></head><body>
+<div id="sk"></div><span class="cl">☁️</span><span class="cl" style="top:130px;animation-delay:-20s">☁️</span>
+<div id="app"></div><div id="md"><div class="card" id="mc"></div></div>
+<script>
+const $=id=>document.getElementById(id);
+const LV=[["Sakura Street","Misi Pengukuran Panjang","🌸","Panjang dan satuan"],["Japanese School","Laboratorium Penggaris","🏫","Alat ukur dan penggaris"],["Konbini Market","Tantangan Pengukuran Berat","🏪","Berat (g dan kg)"],["Traditional Market","Misi Besar Matematika","🧺","Soal cerita gabungan"]];
+const CH=[["Haru","👦"],["Aiko","👧"]];
+const Q=[
+[0,"Haru berjalan melewati sebuah toko yang memasang pita sakura sepanjang 150 cm. Aiko memasang pita sepanjang 100 cm. Berapa sentimeter panjang pita jika digabungkan?","🎀🌸🎀",["200 cm","250 cm","300 cm","350 cm"],1,"150 cm + 100 cm = 250 cm.","penjumlahan"],
+[0,"Jarak dari Train Station ke Sakura Park adalah 2 m. Berapa sentimeter jarak tersebut?","🚉➡️🌳",["20 cm","200 cm","2.000 cm","20.000 cm"],1,"1 m = 100 cm, sehingga 2 m = 200 cm.","mengubah satuan (m ke cm)"],
+[0,"Sebuah pita hias panjangnya 180 cm. Pita dipotong sepanjang 60 cm. Berapa sentimeter pita yang tersisa?","🎀✂️",["100 cm","110 cm","120 cm","140 cm"],2,"180 cm − 60 cm = 120 cm.","pengurangan"],
+[0,"Sepeda Haru panjangnya 1 m. Sepeda Aiko panjangnya 95 cm. Sepeda siapa yang lebih panjang, dan berapa selisihnya?","🚲🚲",["Haru, selisih 5 cm","Aiko, selisih 5 cm","Haru, selisih 95 cm","Sama panjang"],0,"1 m = 100 cm. 100 cm − 95 cm = 5 cm. Sepeda Haru lebih panjang.","mengubah satuan lalu pengurangan"],
+[0,"Momo mengukur lebar stiker sakura: 5 cm. Berapa milimeter lebar stiker itu?","🌸📏",["5 mm","15 mm","50 mm","500 mm"],2,"1 cm = 10 mm, sehingga 5 cm = 50 mm.","mengubah satuan (cm ke mm)"],
+[1,"Aiko memiliki penggaris sepanjang 30 cm. Ia memakai 12 cm untuk menggambar garis. Berapa sentimeter bagian penggaris yang tidak dipakai?","📏✏️",["12 cm","18 cm","30 cm","42 cm"],1,"30 cm − 12 cm = 18 cm.","pengurangan"],
+[1,"Haru mengukur panjang meja 120 cm, sedangkan meja Aiko 100 cm. Berapa sentimeter selisih panjang meja mereka?","🪑🪑",["10 cm","20 cm","100 cm","220 cm"],1,"120 cm − 100 cm = 20 cm.","pengurangan"],
+[1,"Haru ingin mengukur panjang buku tulisnya. Alat apa yang paling tepat?","📘",["Penggaris","Timbangan","Gelas ukur","Jam dinding"],0,"Panjang buku diukur dengan penggaris.","memilih alat ukur"],
+[1,"Lihat penggaris! Ujung kiri pensil Haru di angka 0 dan ujung kanan di angka 14. Berapa sentimeter panjang pensil?","✏️",["4 cm","10 cm","14 cm","140 cm"],2,"14 − 0 = 14 cm.","membaca skala penggaris",14],
+[1,"Pensil Aiko panjangnya 15 cm dan penghapusnya 4 cm. Berapa sentimeter selisih panjang keduanya?","✏️🧽",["11 cm","19 cm","60 cm","4 cm"],0,"15 cm − 4 cm = 11 cm.","pengurangan"],
+[2,"Momo membeli 1 kg apel dan 500 g jeruk. Berapa gram berat seluruh buah yang dibeli Momo?","🍎🍊",["500 g","1.000 g","1.500 g","2.000 g"],2,"1 kg = 1.000 g, sehingga 1.000 g + 500 g = 1.500 g.","mengubah satuan lalu penjumlahan"],
+[2,"Satu kotak stroberi memiliki berat 250 g. Haru membeli 3 kotak. Berapa gram berat seluruh stroberi?","🍓🍓🍓",["500 g","650 g","750 g","1.000 g"],2,"3 × 250 g = 750 g.","perkalian"],
+[2,"Sebuah semangka beratnya 4 kg dan sebuah melon 2 kg. Berapa kilogram selisih berat kedua buah itu?","🍉🍈",["1 kg","2 kg","4 kg","6 kg"],1,"4 kg − 2 kg = 2 kg.","pengurangan"],
+[2,"Satu kantong tepung beratnya 3 kg. Berapa gram berat tepung itu?","🛍️",["30 g","300 g","3.000 g","30.000 g"],2,"1 kg = 1.000 g, sehingga 3 kg = 3.000 g.","mengubah satuan (kg ke g)"],
+[2,"Di rak ada empat barang: 800 g, 1 kg, 900 g, dan 700 g. Mana yang paling berat?","⚖️",["800 g","1 kg","900 g","700 g"],1,"1 kg = 1.000 g. Bandingkan 1.000 g, 900 g, 800 g, 700 g. Paling berat: 1 kg.","membandingkan berat"],
+[3,"Aiko membeli 2 kg beras. Ia memakai 500 g untuk memasak. Berapa gram beras yang tersisa?","🍚",["500 g","1.000 g","1.500 g","2.500 g"],2,"2 kg = 2.000 g. Kemudian 2.000 g − 500 g = 1.500 g.","mengubah satuan lalu pengurangan"],
+[3,"Sebuah kantong beras beratnya 3 kg. Kantong lain beratnya 2 kg. Berapa kilogram berat seluruh beras?","🍚🍚",["1 kg","5 kg","6 kg","8 kg"],1,"3 kg + 2 kg = 5 kg.","penjumlahan"],
+[3,"Haru membeli pita 2 m, lalu memotongnya 50 cm. Berapa sentimeter pita yang tersisa?","🎀✂️",["150 cm","48 cm","250 cm","50 cm"],0,"2 m = 200 cm. 200 cm − 50 cm = 150 cm.","mengubah satuan lalu pengurangan"],
+[3,"Aiko membeli 2 kg beras dan 500 g gula. Berapa gram berat seluruh belanjaannya?","🍚🍬",["502 g","1.500 g","2.500 g","3.000 g"],2,"2 kg = 2.000 g. 2.000 g + 500 g = 2.500 g.","mengubah satuan lalu penjumlahan"],
+[3,"Haru membeli 4 kantong apel, tiap kantong 250 g, dan 1 kg jeruk. Berapa gram berat seluruhnya?","🍎🍎🍎🍎🍊",["1.250 g","2.000 g","1.500 g","2.250 g"],1,"4 × 250 g = 1.000 g. Jeruk 1 kg = 1.000 g. Jadi 1.000 g + 1.000 g = 2.000 g.","perkalian, mengubah satuan, lalu penjumlahan"]];
+let S,snd=true,AC,R={};
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function init(c){S={ch:c||0,stars:0,done:{},ft:{},nh:{},lv:[0,0,0,0],unl:1}}init();
+function beep(f,d,t){if(!snd)return;try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+function win(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.18),i*130))}
+for(let i=0;i<12;i++){const s=document.createElement("span");s.textContent="🌸";s.style.cssText=`left:${Math.random()*100}%;font-size:${14+Math.random()*14}px;animation-duration:${9+Math.random()*9}s;animation-delay:-${Math.random()*12}s`;$("sk").appendChild(s)}
+const nd=()=>Object.keys(S.done).length;
+const hud=()=>`<div class="hud"><span>⭐ ${S.stars}</span><span>✅ ${nd()}/20</span><button class="mini" data-a="snd" aria-label="Suara">${snd?"🔊":"🔇"}</button></div>`;
+const fig=(e,sel)=>`<div class="fig ${sel?"sel":""}"><b>${e}</b>${CH[S.ch][1]}<i>${CH[S.ch][0]}</i></div>`;
+const momo=e=>`<div class="fig"><b>${e}</b>🐱<i>Momo 🤖</i></div>`;
+const aiko=e=>`<div class="fig"><b>${e}</b>${CH[1-S.ch][1]}<i>${CH[1-S.ch][0]}</i></div>`;
+const V=h=>$("app").innerHTML=h;
+function modal(h){$("mc").innerHTML=h;$("md").classList.add("on")}
+function home(){V(`${hud()}<div class="card"><div class="row">${fig("😊")}${momo("😺")}${aiko("😊")}</div><h1>ANIME MATH ADVENTURE<small>Petualangan Pengukuran di Kota Jepang</small></h1><div class="bub">“Hai, Petualang Matematika! Kota Jepang membutuhkan bantuanmu. Ayo selesaikan misi pengukuran panjang dan berat, kumpulkan bintang, dan jadilah Anime Math Hero!”</div>
+<button class="btn" data-a="map">MULAI PETUALANGAN</button><button class="btn b" data-a="pick">PILIH KARAKTER</button><button class="btn g" data-a="map">PETA PETUALANGAN</button><button class="btn y" data-a="how">PETUNJUK PERMAINAN</button><button class="btn s" data-a="snd">PENGATURAN SUARA: ${snd?"HIDUP":"MATI"}</button></div>`)}
+function pick(){V(`${hud()}<div class="card"><h2>Pilih karakter</h2><div class="row">${CH.map((c,i)=>`<div data-a="ch" data-i="${i}" style="cursor:pointer">${`<div class="fig ${i==S.ch?"sel":""}"><b>😊</b>${c[1]}<i>${c[0]}</i></div>`}</div>`).join("")}</div><p>${CH[S.ch][0]} akan menjadi pemainmu. Teman satu lagi memberi petunjuk.</p><button class="btn g" data-a="map">LANJUT KE PETA</button><button class="btn s" data-a="home">KEMBALI</button></div>`)}
+function map(){V(`${hud()}<div class="card"><h2>Peta Kota Jepang</h2><div class="map">${LV.map((l,i)=>{const lock=i>=S.unl;return `<button class="loc" data-a="go" data-i="${i}" ${lock?"disabled":""}><big>${lock?"🔒":l[2]}</big>Level ${i+1}: ${l[0]}<small>${l[1]}</small><small>${S.lv[i]?"⭐ Selesai":lock?"Selesaikan level sebelumnya":"Ayo mulai!"}</small></button>`}).join("")}</div><p style="font-size:14px">🚉 Train Station dan 🌳 Sakura Park muncul di dalam cerita Level 1.</p><button class="btn s" data-a="home">KEMBALI</button></div>`)}
+function walk(i){R={l:i,ids:shuf(Q.map((q,k)=>k).filter(k=>Q[k][0]==i)),qi:0};V(`${hud()}<div class="card"><div class="scene l${i+1}"><div style="font-size:30px">${LV[i][2]} ${LV[i][0]}</div><div class="walk">${CH[S.ch][1]}</div></div><p><b>${CH[S.ch][0]} berjalan menuju ${LV[i][0]}…</b></p></div>`);beep(440,.1);setTimeout(()=>{if(R.l==i)intro()},1500)}
+function intro(){const l=LV[R.l];V(`${hud()}<div class="card"><div class="scene l${R.l+1}"><div style="font-size:30px">${l[2]} ${l[0]}</div><div class="row">${fig("😊")}${momo("😺")}</div></div><div class="bub">Momo: “Level ${R.l+1}, ${l[1]}! Selesaikan 5 soal untuk membantu penduduk.” <small>(Ganbatte = semangat!)</small></div><button class="btn g" data-a="start">MULAI MISI</button><button class="btn s" data-a="map">KEMBALI KE PETA</button></div>`)}
+function ques(){const id=R.ids[R.qi],q=Q[id];R.id=id;R.sel=null;R.h=0;R.wt=false;R.ok=false;R.ord=shuf([0,1,2,3]);R.mood=["🤔","😺"];
+ let rl="";if(q[7]){rl=`<div class="ruler"><div class="pen" style="width:${q[7]/16*100}%"></div>${Array.from({length:16},(_,k)=>`<span><em>${k}</em></span>`).join("")}</div>`}
+ V(`${hud()}<div class="card"><div style="font-weight:800">Soal ${R.qi+1} dari 5 • ${LV[R.l][0]}</div><div class="scene l${R.l+1}"><div class="row" id="ch">${fig("🤔")}${momo("😺")}</div></div><div class="bub">${q[1]}</div><div class="vis">${q[2]}</div>${rl}<div class="opts">${R.ord.map((o,j)=>`<button class="op" data-a="sel" data-i="${o}"><span class="lt">${"ABCD"[j]}</span>${q[3][o]}</button>`).join("")}</div><div id="fb"></div><div id="ctl"><button class="btn g" data-a="chk">PERIKSA JAWABAN</button><button class="btn y" data-a="hint">LIHAT PETUNJUK (BANTU AKU)</button></div><button class="btn s" data-a="map">KEMBALI KE PETA</button></div>`)}
+function mood(h,m,j){$("ch").innerHTML=`<div class="${j?"jump":""}">${fig(h)}</div>${momo(m)}`}
+function chk(){const q=Q[R.id];if(R.sel==null||R.ok){$("fb").innerHTML=R.ok?"":`<div class="ex">Pilih salah satu jawaban dulu ya!</div>`;return}
+ const b=document.querySelector(`.op[data-i="${R.sel}"]`);
+ if(R.sel==q[4]){R.ok=true;b.classList.add("ok");let t="";if(!S.done[R.id]){S.done[R.id]=1;S.ft[R.id]=!R.wt;S.nh[R.id]=R.h==0;S.stars+=3;t=" Kamu mendapat ⭐⭐⭐ (3 bintang)!"}
+  mood("🥳","😻",1);win();$("fb").innerHTML=`<div class="ex">🎉 Sugoi! Hebat sekali! (Sugoi = hebat)${t}<br>Pembahasan: ${q[5]}</div>`;$("ctl").innerHTML=`<button class="btn g" data-a="next">${R.qi==4?"SELESAIKAN LEVEL":"SOAL BERIKUTNYA"}</button>`;document.querySelector(".hud span").textContent="⭐ "+S.stars;document.querySelectorAll(".hud span")[1].textContent="✅ "+nd()+"/20"}
+ else{R.wt=true;b.classList.add("no");b.disabled=true;R.sel=null;mood("😲","🙀");beep(200,.35,"triangle");$("fb").innerHTML=`<div class="ex">Daijoubu! Ayo coba lagi! (Daijoubu = tidak apa-apa)<br>Perhatikan angka, satuan, dan operasi hitungnya. Tidak ada bintang yang dikurangi.</div>`}}
+function hint(){if(R.ok)return;const q=Q[R.id];R.h=Math.min(3,R.h+1);const hs=["Kenali informasi dari cerita: apa saja angka dan satuannya?","Soal ini membutuhkan: "+q[6]+".",q[5].includes("=")?"Coba hitung: "+q[5].replace(/=\s*[^=]*$/,"= ?"):"Tanya dirimu: yang diukur panjang atau berat? Alat mana yang punya garis skala?"];
+ mood("🤔","😼");$("fb").innerHTML=`<div class="ex">${aiko("💡").replace('class="fig"','class="fig" style="display:inline-block;font-size:30px"')} Petunjuk ${R.h} dari 3: ${hs[R.h-1]}</div>`}
+function nxt(){R.qi++;if(R.qi<5)return ques();const l=R.l,first=!S.lv[l];if(first){S.lv[l]=1;S.stars+=5;S.unl=Math.min(4,Math.max(S.unl,l+2))}
+ if(S.lv.every(Boolean)&&first)return end();const c=R.ids.filter(k=>S.ft[k]).length;win();
+ V(`${hud()}<div class="card"><div class="row">${fig("🥳")}${momo("😻")}</div><h2>Level ${l+1} selesai!</h2><p>Benar pada percobaan pertama: ${c} dari 5.${first?" Bonus ⭐ 5 bintang!":""}</p>${l<3?`<button class="btn g" data-a="go" data-i="${l+1}">LEVEL BERIKUTNYA</button>`:""}<button class="btn y" data-a="go" data-i="${l}">ULANGI LEVEL</button><button class="btn b" data-a="map">KEMBALI KE PETA</button></div>`)}
+function end(){const ft=Object.keys(S.ft).filter(k=>S.ft[k]).length,nh=Object.keys(S.nh).filter(k=>S.nh[k]).length,pc=Math.round(ft/20*100);win();
+ const per=LV.map((l,i)=>{const c=Q.reduce((a,q,k)=>a+(q[0]==i&&S.ft[k]?1:0),0);return `<li>${c>=4?"✅ Dikuasai":"🔁 Perlu diulang"}: ${l[3]} (${c}/5)</li>`}).join("");
+ V(`${hud()}<div class="card"><div class="scene l1"><div class="row">${fig("🥳")}${momo("😻")}${aiko("🥳")}</div>🌸🏯🌸🎉🌸</div><h2>${CH[S.ch][0]}, Anime Math Hero!</h2><p><b>⭐ ${S.stars} bintang • ✅ 20 soal selesai • Benar percobaan pertama: ${ft}/20 (${pc}%)</b></p><ul>${per}</ul><p>🏅 Lencana: Anime Math Hero${nh>=10?" • 🔎 Detektif Matematika (${nh} soal tanpa petunjuk)":""}</p><div class="bub">“Selamat, Anime Math Hero! Kamu berhasil membantu teman-teman di kota Jepang dengan kemampuan pengukuran panjang dan berat. Terus berlatih agar semakin hebat dalam matematika!”</div><button class="btn" data-a="again">MAIN LAGI</button><button class="btn y" data-a="map">ULANGI LEVEL</button><button class="btn b" data-a="rev">LIHAT PEMBAHASAN</button></div>`.replace("${nh}",nh))}
+const act={
+ snd(){snd=!snd;beep(600,.1);document.querySelectorAll(".mini").forEach(m=>m.textContent=snd?"🔊":"🔇");if(document.querySelector('[data-a="snd"].btn'))home()},
+ home,pick,map,start:ques,chk,hint,next:nxt,
+ ch(b){S.ch=+b.dataset.i;pick()},
+ go(b){walk(+b.dataset.i)},
+ sel(b){if(R.ok||b.disabled)return;R.sel=+b.dataset.i;document.querySelectorAll(".op").forEach(o=>o.classList.toggle("on",o==b));beep(520,.08)},
+ how(){modal(`<h2>Petunjuk Permainan</h2><ol><li>Pilih karakter dan buka peta.</li><li>Klik lokasi yang terbuka.</li><li>Baca cerita Momo, pilih jawaban, lalu tekan PERIKSA JAWABAN.</li><li>Benar: 3 bintang. Salah: coba lagi, tanpa pengurangan bintang.</li><li>Tombol BANTU AKU memberi 3 petunjuk bertahap.</li><li>Selesaikan 5 soal untuk bonus 5 bintang dan membuka level berikutnya.</li></ol><button class="btn g" data-a="x">MENGERTI</button>`)},
+ rev(){modal(`<h2>Pembahasan</h2>${Q.map((q,k)=>`<p style="text-align:left"><b>${k+1}.</b> ${q[1]}<br>✅ ${q[3][q[4]]}<br><small>${q[5]}</small></p>`).join("")}<button class="btn g" data-a="x">TUTUP</button>`)},
+ x(){$("md").classList.remove("on")},
+ again(){init(S.ch);home()}};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||!act[b.dataset.a])return;if(!["sel","snd"].includes(b.dataset.a))beep(660,.07);act[b.dataset.a](b);if(b.dataset.a=="x"||b.dataset.a=="how"||b.dataset.a=="rev"){}});
+home();
+</script></body></html>
